@@ -1,0 +1,113 @@
+name: Hello Reason
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+defaults:
+  run:
+    working-directory: examples/hello-reason
+
+jobs:
+  native:
+    name: Build for native
+
+    strategy:
+      matrix:
+        system: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.system }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install esy
+        run: npm install -g esy
+
+      - name: Create esy wrapper
+        run: |
+          echo '{
+            "source": "package.json",
+            "override": {
+              "dependencies": {
+                "${{ github.event.repository.name }}": "github:'"${GITHUB_REPOSITORY}"':generate.json#'"${GITHUB_SHA}"'"
+              }
+            }
+          }' > generate.json
+
+      - uses: esy/github-action@master
+        with:
+          working-directory: examples/hello-reason
+          manifest: generate.json
+          cache-key: ${{ hashFiles('esy.lock/index.json') }}
+
+  cross-compile:
+    needs: native
+    strategy:
+      fail-fast: false
+      matrix:
+        system: [ubuntu, macos]
+        target:
+          [
+            android.arm64,
+            android.x86_64,
+            freebsd.x86_64,
+            ios.arm64,
+            ios.simulator.x86_64,
+            linux.musl.arm64,
+            linux.musl.x86_64
+          ]
+        exclude:
+          - system: ubuntu
+            target: ios.arm64
+          - system: ubuntu
+            target: ios.simulator.x86_64
+          # TODO: Fix linux.musl + macOS on the CI
+          - system: macos
+            target: linux.musl.arm64
+          - system: macos
+            target: linux.musl.x86_64
+          - system: macos
+            target: freebsd.x86_64
+
+    name: Build ${{ matrix.target }} on ${{ matrix.system }}
+    runs-on: ${{ matrix.system }}-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install esy
+        run: npm install -g esy
+
+      - name: Create esy wrapper
+        run: |
+          echo '{
+            "source": "package.json",
+            "override": {
+              "dependencies": {
+                "${{ github.event.repository.name }}": "github:'"${GITHUB_REPOSITORY}"':generate.json#'"${GITHUB_SHA}"'"
+              }
+            }
+          }' > generate.json
+
+      - uses: esy/github-action@master
+        with:
+          working-directory: examples/hello-reason
+          manifest: ./generate.json
+          cache-key: ${{ hashFiles('esy.lock/index.json') }}
+
+      - name: Generate wrapper
+        run: esy @generate generate ${{ matrix.target }}
+
+      - name: Build ${{ matrix.target }}
+        run: esy @${{ matrix.target }} build
