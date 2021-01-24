@@ -37,7 +37,7 @@ jobs:
             "source": "./package.json",
             "override": {
               "dependencies": {
-                "reason-mobile": "github:EduardoRFS/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
+                "reason-mobile": "github:${{ github.event.repository.name }}/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
               }
             }
           }' > generate.json
@@ -95,7 +95,7 @@ jobs:
             "source": "./package.json",
             "override": {
               "dependencies": {
-                "reason-mobile": "github:EduardoRFS/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
+                "reason-mobile": "github:${{ github.event.repository.name }}/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
               }
             }
           }' > generate.json
