@@ -33,14 +33,14 @@ jobs:
 
       - name: Create esy wrapper
         run: |
-          echo '{
+          echo "{
             "source": "./package.json",
             "override": {
               "dependencies": {
-                "reason-mobile": "github:${GITHUB_ACTOR}/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
+                "reason-mobile": "github:${GITHUB_REPOSITORY}:generate.json#'"${GITHUB_SHA}"'"
               }
             }
-          }' > generate.json
+          }" > generate.json
 
       - uses: esy/github-action@master
         with:
@@ -91,14 +91,14 @@ jobs:
 
       - name: Create esy wrapper
         run: |
-          echo '{
+          echo "{
             "source": "./package.json",
             "override": {
               "dependencies": {
-                "reason-mobile": "github:${GITHUB_ACTOR}/reason-mobile:generate.json#'"${GITHUB_SHA}"'"
+                "reason-mobile": "github:${GITHUB_REPOSITORY}:generate.json#'"${GITHUB_SHA}"'"
               }
             }
-          }' > generate.json
+          }" > generate.json
 
       - uses: esy/github-action@master
         with:
