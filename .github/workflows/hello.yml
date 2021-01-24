@@ -34,7 +34,7 @@ jobs:
       - name: Create esy wrapper
         run: |
           echo '{
-            "source": "package.json",
+            "source": "./package.json",
             "override": {
               "dependencies": {
                 "${{ github.event.repository.name }}": "github:${{ github.event.repository }}:generate.json#${{ github.event.sha }}"
@@ -45,7 +45,7 @@ jobs:
       - uses: esy/github-action@master
         with:
           working-directory: examples/hello-reason
-          manifest: generate.json
+          manifest: ./generate.json
           cache-key: ${{ hashFiles('esy.lock/index.json') }}
 
   cross-compile:
@@ -92,7 +92,7 @@ jobs:
       - name: Create esy wrapper
         run: |
           echo '{
-            "source": "package.json",
+            "source": "./package.json",
             "override": {
               "dependencies": {
                 "${{ github.event.repository.name }}": "github:${{ github.event.repository }}:generate.json#${{ github.event.sha }}"
