@@ -1,20 +1,20 @@
 {
   "name": "hello-server",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "esy": {
     "build": "dune build -p #{self.name}",
     "release": { "releasedBinaries": [ "hello-server" ] }
   },
-  "scripts": { "start": "esy x hello-server" },
+  "scripts": {
+    "start": "esy x hello-server"
+  },
   "dependencies": {
     "@esy-ocaml/reason": "^3.5.2",
-    "@opam/dune": "^2.5.0",
-    "@opam/lwt": "5.3.0",
-    "@opam/opium": "0.18.0",
+    "@opam/dune": "2.7.1",
+    "@opam/dune-configurator": "2.7.1",
+    "@opam/lwt": "5.4.0",
+    "@opam/opium": "0.20.0",
     "@reason-native/pastel": "^0.3.0",
-    "ocaml": "4.8.1000"
-  },
-  "devDependencies": {
-    "@opam/ocaml-lsp-server": "ocaml/ocaml-lsp:ocaml-lsp-server.opam"
+    "ocaml": "4.10.x"
   }
 }
